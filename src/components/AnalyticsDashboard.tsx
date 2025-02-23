@@ -3,8 +3,45 @@
 import { useEffect, useRef } from 'react'
 import Chart from 'chart.js/auto'
 
+// Define the matrix data structure
+interface TaskStatus {
+  progress: number;
+  completed: boolean;
+  notes: string;
+  assignee?: {
+    id: string;
+    name: string;
+    role: string;
+  };
+}
+
+interface MatrixData {
+  [phase: string]: {
+    [module: string]: TaskStatus;
+  };
+}
+
 interface AnalyticsProps {
-  matrixData: any
+  matrixData: MatrixData;
+}
+
+interface AnalyticsData {
+  value: number;
+  change: number;
+  label: string;
+}
+
+interface ChartDataset {
+  label: string;
+  data: number[];
+  backgroundColor: string;
+  borderColor: string;
+  borderWidth: number;
+}
+
+interface ChartData {
+  labels: string[];
+  datasets: ChartDataset[];
 }
 
 export default function AnalyticsDashboard({ matrixData }: AnalyticsProps) {
@@ -30,11 +67,11 @@ export default function AnalyticsDashboard({ matrixData }: AnalyticsProps) {
     }
 
     // Calculate phase progress
-    const phaseProgress = Object.entries(matrixData).map(([phase, modules]: [string, any]) => {
-      const tasks = Object.values(modules) as any[]
+    const phaseProgress = Object.entries(matrixData).map(([phase, modules]: [string, Record<string, TaskStatus>]) => {
+      const tasks = Object.values(modules)
       const validTasks = tasks.filter(task => task?.progress !== undefined)
       const progress = validTasks.length > 0
-        ? validTasks.reduce((acc: number, task: any) => acc + (task.progress || 0), 0) / validTasks.length
+        ? validTasks.reduce((acc, task) => acc + (task.progress || 0), 0) / validTasks.length
         : 0
       return { phase, progress }
     })

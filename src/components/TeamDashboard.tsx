@@ -18,6 +18,26 @@ interface TaskInfo {
   dueDate?: string
 }
 
+interface MatrixData {
+  [phase: string]: {
+    [module: string]: {
+      assignee?: {
+        id: string;
+        name: string;
+        role: string;
+      };
+      progress: number;
+      completed: boolean;
+      notes: string;
+      dueDate?: string;
+    };
+  };
+}
+
+interface TeamDashboardProps {
+  matrixData: MatrixData;
+}
+
 const teamMembers: TeamMember[] = [
   { 
     id: '1', 
@@ -28,14 +48,14 @@ const teamMembers: TeamMember[] = [
   // ... other team members
 ]
 
-export default function TeamDashboard({ matrixData }: { matrixData: any }) {
+export default function TeamDashboard({ matrixData }: TeamDashboardProps) {
   const [selectedMember, setSelectedMember] = useState<string | null>(null)
 
   // Process matrix data to get tasks per member
   const processedTeamMembers = teamMembers.map(member => {
     const tasks: TaskInfo[] = []
-    Object.entries(matrixData).forEach(([phase, modules]: [string, any]) => {
-      Object.entries(modules).forEach(([module, task]: [string, any]) => {
+    Object.entries(matrixData).forEach(([phase, modules]) => {
+      Object.entries(modules).forEach(([module, task]) => {
         if (task.assignee?.id === member.id) {
           tasks.push({
             phase,

@@ -20,7 +20,7 @@ const modules = [
 
 // Initialize matrix data structure
 const initializeMatrixData = () => {
-  const data: any = {}
+  const data: MatrixData = {}
   phases.forEach(phase => {
     data[phase] = {}
     modules.forEach(module => {
