@@ -5,7 +5,55 @@ import Link from 'next/link'
 import EventOverview from '@/components/EventOverview'
 import AIChatWindow from '@/components/AIChatWindow'
 
+interface NavigationCard {
+  href: string;
+  title: string;
+  description: string;
+}
+
+const navigationCards: NavigationCard[] = [
+  {
+    href: '/schedule',
+    title: 'Event Schedule',
+    description: 'Manage your event timeline and schedule'
+  },
+  {
+    href: '/marketing',
+    title: 'Marketing Materials',
+    description: 'Event introduction, branding, and format'
+  },
+  {
+    href: '/vendors',
+    title: 'Vendor Management',
+    description: 'Venue, catering, and security details'
+  },
+  {
+    href: '/speakers',
+    title: 'Speaker Management',
+    description: 'Speaker profiles and confirmations'
+  },
+  {
+    href: '/attendees',
+    title: 'Attendee Management',
+    description: 'Registration and subscriptions'
+  },
+  {
+    href: '/partners',
+    title: 'Partner Management',
+    description: 'Co-hosts, community and media partners'
+  },
+  {
+    href: '/sponsors',
+    title: 'Sponsor Management',
+    description: 'Sponsorship tiers and tracking'
+  }
+]
+
 export default function Home() {
+  const handleNewModule = () => {
+    alert('Module creation coming soon!')
+  }
+
   return (
     <main className="min-h-screen p-8">
       <header className="mb-8">
@@ -27,46 +75,20 @@ export default function Home() {
       </header>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {/* Event Management Sections */}
-        <Link href="/schedule" className="p-6 border rounded-lg hover:shadow-lg transition-shadow">
-          <h2 className="text-2xl font-semibold mb-2">Event Schedule</h2>
-          <p className="text-gray-600">Manage your event timeline and schedule</p>
-        </Link>
+        {navigationCards.map((card) => (
+          <Link 
+            key={card.href}
+            href={card.href} 
+            className="p-6 border rounded-lg hover:shadow-lg transition-shadow"
+          >
+            <h2 className="text-2xl font-semibold mb-2">{card.title}</h2>
+            <p className="text-gray-600">{card.description}</p>
+          </Link>
+        ))}
 
-        <Link href="/marketing" className="p-6 border rounded-lg hover:shadow-lg transition-shadow">
-          <h2 className="text-2xl font-semibold mb-2">Marketing Materials</h2>
-          <p className="text-gray-600">Event introduction, branding, and format</p>
-        </Link>
-
-        <Link href="/vendors" className="p-6 border rounded-lg hover:shadow-lg transition-shadow">
-          <h2 className="text-2xl font-semibold mb-2">Vendor Management</h2>
-          <p className="text-gray-600">Venue, catering, and security details</p>
-        </Link>
-
-        <Link href="/speakers" className="p-6 border rounded-lg hover:shadow-lg transition-shadow">
-          <h2 className="text-2xl font-semibold mb-2">Speaker Management</h2>
-          <p className="text-gray-600">Speaker profiles and confirmations</p>
-        </Link>
-
-        <Link href="/attendees" className="p-6 border rounded-lg hover:shadow-lg transition-shadow">
-          <h2 className="text-2xl font-semibold mb-2">Attendee Management</h2>
-          <p className="text-gray-600">Registration and subscriptions</p>
-        </Link>
-
-        <Link href="/partners" className="p-6 border rounded-lg hover:shadow-lg transition-shadow">
-          <h2 className="text-2xl font-semibold mb-2">Partner Management</h2>
-          <p className="text-gray-600">Co-hosts, community and media partners</p>
-        </Link>
-
-        <Link href="/sponsors" className="p-6 border rounded-lg hover:shadow-lg transition-shadow">
-          <h2 className="text-2xl font-semibold mb-2">Sponsor Management</h2>
-          <p className="text-gray-600">Sponsorship tiers and tracking</p>
-        </Link>
-
-        {/* Add New Module Card */}
         <button 
           className="p-6 border rounded-lg hover:shadow-lg transition-shadow border-dashed flex items-center justify-center"
-          onClick={() => alert('Module creation coming soon!')}
+          onClick={handleNewModule}
         >
           <div className="text-center">
             <span className="text-4xl block mb-2">+</span>
