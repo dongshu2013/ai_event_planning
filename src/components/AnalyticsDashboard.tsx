@@ -2,46 +2,10 @@
 
 import { useEffect, useRef } from 'react'
 import Chart from 'chart.js/auto'
-
-// Define the matrix data structure
-interface TaskStatus {
-  progress: number;
-  completed: boolean;
-  notes: string;
-  assignee?: {
-    id: string;
-    name: string;
-    role: string;
-  };
-}
-
-interface MatrixData {
-  [phase: string]: {
-    [module: string]: TaskStatus;
-  };
-}
+import { MatrixData, TaskStatus } from '@/types/matrix'
 
 interface AnalyticsProps {
   matrixData: MatrixData;
-}
-
-interface AnalyticsData {
-  value: number;
-  change: number;
-  label: string;
-}
-
-interface ChartDataset {
-  label: string;
-  data: number[];
-  backgroundColor: string;
-  borderColor: string;
-  borderWidth: number;
-}
-
-interface ChartData {
-  labels: string[];
-  datasets: ChartDataset[];
 }
 
 export default function AnalyticsDashboard({ matrixData }: AnalyticsProps) {
@@ -78,11 +42,12 @@ export default function AnalyticsDashboard({ matrixData }: AnalyticsProps) {
 
     // Calculate module progress
     const firstPhase = Object.values(matrixData)[0] || {}
+    const phases = Object.values(matrixData) as Record<string, TaskStatus>[]
     const moduleProgress = Object.keys(firstPhase).map(module => {
-      const phases = Object.values(matrixData) as any[]
       const validPhases = phases.filter(phase => phase[module]?.progress !== undefined)
       const progress = validPhases.length > 0
-        ? validPhases.reduce((acc: number, phase: any) => acc + (phase[module]?.progress || 0), 0) / validPhases.length
+        ? validPhases.reduce((acc: number, phase: Record<string, TaskStatus>) => 
+            acc + (phase[module]?.progress || 0), 0) / validPhases.length
         : 0
       return { module, progress }
     })

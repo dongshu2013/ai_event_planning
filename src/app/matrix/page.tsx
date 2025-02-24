@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import { MatrixData } from '@/types/matrix'
 import EventMatrix from '@/components/EventMatrix'
 import TeamDashboard from '@/components/TeamDashboard'
 import AnalyticsDashboard from '@/components/AnalyticsDashboard'
@@ -18,25 +19,22 @@ const modules = [
   'Attendees'
 ]
 
-// Initialize matrix data structure
-const initializeMatrixData = () => {
-  const data: MatrixData = {}
-  phases.forEach(phase => {
-    data[phase] = {}
-    modules.forEach(module => {
-      data[phase][module] = {
-        completed: false,
-        notes: '',
-        progress: 0
-      }
-    })
-  })
-  return data
-}
-
 export default function MatrixPage() {
   const [activeTab, setActiveTab] = useState('matrix')
-  const [matrixData, setMatrixData] = useState(initializeMatrixData())
+  const [matrixData, setMatrixData] = useState<MatrixData>(() => {
+    const initialData: MatrixData = {}
+    phases.forEach(phase => {
+      initialData[phase] = {}
+      modules.forEach(module => {
+        initialData[phase][module] = {
+          completed: false,
+          notes: '',
+          progress: 0
+        }
+      })
+    })
+    return initialData
+  })
 
   const tabs = [
     { id: 'matrix', label: 'Planning Matrix' },
@@ -77,7 +75,11 @@ export default function MatrixPage() {
         </div>
       </div>
       
-      {activeTab === 'matrix' && <EventMatrix onDataChange={setMatrixData} />}
+      {activeTab === 'matrix' && (
+        <EventMatrix 
+          onDataChange={(newData: MatrixData) => setMatrixData(newData)} 
+        />
+      )}
       {activeTab === 'team' && <TeamDashboard matrixData={matrixData} />}
       {activeTab === 'analytics' && <AnalyticsDashboard matrixData={matrixData} />}
     </div>

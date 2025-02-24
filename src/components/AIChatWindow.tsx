@@ -12,23 +12,27 @@ export default function AIChatWindow() {
   const [messages, setMessages] = useState<Message[]>([])
   const [input, setInput] = useState('')
 
-  const handleSend = async () => {
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
     if (!input.trim()) return
 
-    const newMessages = [
+    const newMessages: Message[] = [
       ...messages,
-      { role: 'user', content: input }
+      { role: 'user' as const, content: input }
     ]
+    
     setMessages(newMessages)
     setInput('')
 
-    // Here you would typically make an API call to your AI backend
-    // For now, we'll simulate a response
+    // Simulate AI response
     setTimeout(() => {
-      setMessages([...newMessages, {
-        role: 'assistant',
-        content: 'I understand you need help with event planning. How can I assist you today?'
-      }])
+      setMessages([
+        ...newMessages,
+        {
+          role: 'assistant' as const,
+          content: 'This is a placeholder response. AI integration coming soon!'
+        }
+      ])
     }, 1000)
   }
 
@@ -74,24 +78,23 @@ export default function AIChatWindow() {
             ))}
           </div>
 
-          <div className="p-4 border-t">
+          <form onSubmit={handleSubmit} className="p-4 border-t">
             <div className="flex gap-2">
               <input
                 type="text"
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
-                onKeyPress={(e) => e.key === 'Enter' && handleSend()}
+                className="flex-1 border rounded-lg px-3 py-2"
                 placeholder="Type your message..."
-                className="flex-1 border rounded-lg p-2"
               />
               <button
-                onClick={handleSend}
+                type="submit"
                 className="bg-blue-500 text-white px-4 py-2 rounded-lg"
               >
                 Send
               </button>
             </div>
-          </div>
+          </form>
         </div>
       )}
     </>

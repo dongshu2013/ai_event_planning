@@ -1,12 +1,8 @@
 'use client'
 
 import { useState } from 'react'
-
-interface TeamMember {
-  id: string
-  name: string
-  role: string
-}
+import { MatrixData, TeamMember } from '@/types/matrix'
+import { teamMembers } from '@/data/teamMembers'
 
 interface TaskStatus {
   completed: boolean
@@ -14,12 +10,6 @@ interface TaskStatus {
   assignee?: TeamMember
   progress: number // 0-100
   lastUpdated?: string
-}
-
-interface MatrixData {
-  [phase: string]: {
-    [module: string]: TaskStatus
-  }
 }
 
 const phases = ['Initiation', 'Preparation', 'Coordination', 'Recap']
@@ -34,16 +24,11 @@ const modules = [
   'Attendees'
 ]
 
-// Sample team members - in real app, this would come from your backend
-const teamMembers: TeamMember[] = [
-  { id: '1', name: 'Alice Johnson', role: 'Event Lead' },
-  { id: '2', name: 'Bob Smith', role: 'Marketing Manager' },
-  { id: '3', name: 'Carol White', role: 'Vendor Coordinator' },
-  { id: '4', name: 'David Brown', role: 'Speaker Liaison' },
-  { id: '5', name: 'Eve Wilson', role: 'Partner Relations' }
-]
+interface EventMatrixProps {
+  onDataChange: (data: MatrixData) => void;
+}
 
-export default function EventMatrix() {
+export default function EventMatrix({ onDataChange }: EventMatrixProps) {
   const [matrixData, setMatrixData] = useState<MatrixData>(() => {
     const initialData: MatrixData = {}
     phases.forEach(phase => {
@@ -68,17 +53,20 @@ export default function EventMatrix() {
   const updateTaskStatus = (updates: Partial<TaskStatus>) => {
     if (!selectedCell) return
 
-    setMatrixData(prev => ({
-      ...prev,
+    const newData = {
+      ...matrixData,
       [selectedCell.phase]: {
-        ...prev[selectedCell.phase],
+        ...matrixData[selectedCell.phase],
         [selectedCell.module]: {
-          ...prev[selectedCell.phase][selectedCell.module],
+          ...matrixData[selectedCell.phase][selectedCell.module],
           ...updates,
           lastUpdated: new Date().toISOString()
         }
       }
-    }))
+    }
+    
+    setMatrixData(newData)
+    onDataChange(newData)
   }
 
   const getProgressColor = (progress: number) => {

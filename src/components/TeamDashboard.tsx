@@ -116,7 +116,7 @@ export default function TeamDashboard({ matrixData }: TeamDashboardProps) {
           <div className="bg-white p-6 rounded-lg w-[800px] max-h-[80vh] overflow-y-auto">
             <div className="flex justify-between items-start mb-6">
               <h3 className="text-xl font-semibold">
-                {processedTeamMembers.find(m => m.id === selectedMember)?.name}'s Tasks
+                {processedTeamMembers.find(m => m.id === selectedMember)?.name}&apos;s Tasks
               </h3>
               <button 
                 onClick={() => setSelectedMember(null)}
